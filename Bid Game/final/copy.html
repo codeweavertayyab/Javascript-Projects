@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="Description" content="Enter your description here" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css" />
+
+    <title>Form</title>
+</head>
+<style>
+    .formcon {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .formcon input {
+        height: 50px;
+        width: 400px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <form action="post" id="myForm">
+        <div class="container formcon">
+            <h1 class="display-1 fw-bold mb-5">New Entry For Bid</h1>
+            <div class="row">
+                <div class="col">
+                    <input type="text" placeholder="Enter Name" class="form-control" id="pname" />
+                </div>
+                <div class="col">
+                    <input type="text" placeholder="Enter 4 Digit Number Of Your Bid" class="form-control"
+                        id="bidnumber" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="text" placeholder="Bid Amount 1" class="form-control" id="bid1" />
+                </div>
+                <div class="col">
+                    <input type="text" placeholder="Bid Amount 2" class="form-control" id="bid2" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg mt-5" onclick="myBidGame()">
+                Submit
+            </button>
+        </div>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var form = document.getElementById("myForm");
+        function handleForm(event) {
+            event.preventDefault();
+        }
+        form.addEventListener("submit", handleForm);
+        document.getElementById("bidnumber").addEventListener("input", function (event) {
+            let input = event.target.value;
+
+            input = input.replace(/[^\d*+]/g, '');
+
+            input = input.slice(0, 4);
+
+            event.target.value = input;
+        });
+        const myBidGame = async () => {
+            const win = [1, 2, 3, 4];
+            let prize = [8, 80, 800, 8000];
+            const candid = [];
+            let correct = [];
+            let bid = [];
+            let total = 0;
+            let valcheck = false;
+
+            let name = document.getElementById("pname").value;
+            let val = document.getElementById("bidnumber").value.split("");
+            let bid1 = document.getElementById("bid1").value;
+            let bid2 = document.getElementById("bid2").value;
+
+
+            if (bid1 % 10 > 5) {
+                bid1 = parseInt(bid1 / 10) * 10 + 10;
+                console.log(bid1);
+
+            }
+            else if (bid1 % 10 < 5) {
+                bid1 = parseInt(bid1 / 10) * 10 + 5;
+                console.log(bid1);
+                
+            }
+            if (bid2 % 10 > 5) {
+                bid2 = parseInt(bid2 / 10) * 10 + 10;
+                console.log(bid2);
+
+
+            }
+            else if(bid2 % 10 < 5){
+                bid2 = parseInt(bid2 / 10) * 10 + 5;
+                console.log(bid2);
+
+
+            }
+
+
+
+            bid.push(bid1, bid2);
+            for (let j = 0; j < val.length; j++) {
+                if (val[j] == "*" || val[j] == "+") {
+                    continue;
+                } else if (win[j] == parseInt(val[j])) {
+                    correct.push(parseInt(val[j]));
+                    valcheck = true;
+                } else {
+                    valcheck = false;
+                    break;
+                }
+            }
+            if (valcheck) {
+                for (let g = 0; g < bid.length; g++) {
+                    total += parseInt(bid[g]);
+
+
+                    valcheck = true;
+                }
+                if (correct.length == 1) {
+                    total *= 8;
+                } else if (correct.length == 2) {
+                    total *= 80;
+                } else if (correct.length == 3) {
+                    total *= 800;
+                } else if (correct.length == 4) {
+                    total *= 8000;
+                }
+
+                let obj = {
+                    name: name,
+                    value: val,
+                    correct: correct,
+                    bid: bid,
+                    total: total,
+                };
+                const dataToSend = JSON.stringify(obj);
+                let dataReceived = "";
+                fetch("http://localhost:3000/BidGame", {
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    body: dataToSend,
+                })
+                    .then((resp) => {
+                        if (resp.status === 200) {
+                            return resp.json();
+                            console.log("Status: " + resp.statusText);
+                        } else {
+                            console.log("Status: " + resp.statusText);
+                            return Promise.reject("server");
+                        }
+                    })
+                    .then((jsonData) => {
+                        dataReceived = JSON.parse(jsonData);
+                        console.log("Success");
+                    })
+                    .catch((err) => {
+                        if (err === "server") {
+                            return console.log(err);
+                        }
+                    });
+                console.log(obj);
+                Swal.fire({
+                    icon: "success",
+                    title: "You Won",
+                    text: "Yayyyy Congratulations You Won: " + '$' + total,
+                    showConfirmButton: false,
+
+                }, setTimeout(() => {
+
+                    window.location.href = 'bid.html'
+                }, 1100));
+
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "You Lost",
+                    text: "We Are Sorry For Your Amount!",
+                    showConfirmButton: false,
+
+                },
+                    setTimeout(() => {
+
+                        window.location.href = 'bid.html'
+                    }, 3000)
+                );
+
+            }
+            // document.getElementById("pname").value = "";
+            // document.getElementById("bidnumber").value = "";
+            // document.getElementById("bid1").value = "";
+            // document.getElementById("bid2").value = "";
+        };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

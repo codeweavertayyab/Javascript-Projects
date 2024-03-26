@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<style>
+    #btnwon{
+        background-color: rgb(0, 173, 0);
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    #btnlost{
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+</style>
+<body>
+   <div class="container-fluid p-5">
+    <h1 class="display-2">BID GAME</h1>
+    <button onclick="postBids()" class="btn btn-warning btn-lg">New Entry</button>
+    <!-- <button onclick="fetchBids()" class="btn btn-danger">Fetch</button> -->
+    <table class="table mt-5">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Bid Number</th>
+                <th>First Bid</th>
+                <th>Second Bid</th>
+                <th>Total</th>
+                <th>Winning Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="result">
+            
+        </tbody>
+    </table>
+   </div>
+</body>
+
+</html>
+<script>
+    let awardNum = [1, 3, 5, 7];
+
+    let emptyar = [];
+    const postBids = async () => {
+
+        let bname = prompt("Enter Your Name: ");
+        let bidnum = prompt("Enter 4 digit number:");
+        let fvalue = Number(prompt("Enter bid 1"));
+        let lvalue = Number(prompt("Enter bid 2"));
+        let amount = fvalue + lvalue;
+        var bidObj = {
+            "name": bname,
+            "bidnum": bidnum,
+            "fvalue": fvalue,
+            "lvalue": lvalue,
+            "amount": amount
+        }
+        emptyar.push(bidObj);
+        const dataToSend = JSON.stringify(bidObj);
+        let dataReceived = "";
+        fetch("http://localhost:3000/BidGame", {
+
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: dataToSend
+        })
+            .then(resp => {
+                if (resp.status === 200) {
+                    return resp.json()
+                } else {
+                    console.log("Status: " + resp.status)
+                    return Promise.reject("server")
+                }
+            })
+            .then(dataJson => {
+                dataReceived = JSON.parse(dataJson)
+            })
+            .catch(err => {
+                if (err === "server") return
+                console.log(err)
+            })
+
+
+            window.location.reload();
+
+    }
+
+    let bidindex=[]
+    let bidNumArrayy = [];
+    let amountt = 0;
+    let iswon = false;
+    const fetchBids = async () => {
+        let data = []
+        let res = await fetch("http://localhost:3000/BidGame");
+        data = await res.json();
+        // console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+            let bidn = data[i].bidnum;
+            bidn = bidn.split('');
+            // console.log(bidn);
+            for(let p=0; p<bidn.length; p++){
+                if(bidn[p] == '*' || bidn[p] == '+'){
+                    continue;
+                }
+                else{
+                    
+                    bidindex.push(p)
+                    bidNumArrayy.push(bidn[p])
+                }
+            }
+
+            if (bidn[0] == awardNum[0]) {
+                amountt = (data[i].amount) * 8;
+                iswon = true;
+            }
+            if (bidn[1] == awardNum[1]) {
+                amountt = (data[i].amount) * 80;
+                iswon = true;
+
+            }
+            if (bidn[2] == awardNum[2]) {
+                amountt = (data[i].amount) * 800;
+                iswon = true;
+
+            }
+            if (bidn[3] == awardNum[3]) {
+                amountt = (data[i].amount) * 8000;
+                iswon = true;
+
+            }
+            if (bidn[0] != awardNum[0] && bidn[1] != awardNum[1] && bidn[2] != awardNum[2] && bidn[3] != awardNum[3]) {
+                document.getElementById('result').innerHTML +=
+                    `
+                <tr>
+                <td>${data[i].name}</td>
+                <td>${data[i].bidnum}</td>
+                <td>${data[i].fvalue}</td>
+                <td>${data[i].lvalue}</td>
+                <td>${data[i].amount}</td>
+                <td>0</td>
+                <td><button id="btnlost" disabled>LOST 😭</button></td>
+            </tr>
+                
+                `
+                iswon = false;
+
+            }
+            if (iswon) {
+                document.getElementById('result').innerHTML +=
+                    `
+                <tr>
+                <td>${data[i].name}</td>
+                <td>${data[i].bidnum}</td>
+                <td>${data[i].fvalue}</td>
+                <td>${data[i].lvalue}</td>
+                <td>${data[i].amount}</td>
+                <td>${amountt}</td>
+                <td><button id="btnwon" disabled>WON 😀</button></td>
+            </tr>
+                
+                `
+
+
+            }
+
+
+
+
+
+        }
+    }
+    console.log(bidindex);
+    console.log(bidNumArrayy);
+    fetchBids()
+</script>

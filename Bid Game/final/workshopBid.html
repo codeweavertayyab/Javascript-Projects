@@ -1,0 +1,54 @@
+<script>
+  let correct = [];
+  let win = [1, 2, 3, 4];
+  let total = 0;
+  let pname = prompt("Enter Name");
+  let bidnum = prompt("Enter Bid Number: ").split("");
+  let bid1 = parseInt(prompt("Enter Bid 1"));
+  let bid2 = parseInt(prompt("Enter Bid 2"));
+
+  for (let i = 0; i < bidnum.length; i++) {
+    if(bidnum[i] == '*' || bidnum[i] == '+'){
+        continue;
+    }
+    else if (win[i] == bidnum[i]) {
+      correct.push(bidnum[i]);
+    }
+    else{
+        break;
+    }
+  }
+  total = bid1 + bid2;
+
+  if (correct.length == 1) {
+    total *= 8;
+  }
+  if (correct.length == 2) {
+    total *= 80;
+  }
+  if (correct.length == 3) {
+    total *= 800;
+  }
+  if (correct.length == 4) {
+    total *= 8000;
+  }
+  if (correct.length == 0) {
+    total = 0;
+  }
+
+  let obj = {
+    "name": pname,
+    "bidnumber": bidnum,
+    "bid1": bid1,
+    "bid2": bid2,
+    "correctnum": correct,
+    "prizeWon": total,
+  };
+  let dataToSend = JSON.stringify(obj);
+  fetch('http://localhost:3000/demoBid',{
+    method : 'post',
+    body: dataToSend
+  })
+  console.log(dataToSend);
+  console.log(obj);
+</script>

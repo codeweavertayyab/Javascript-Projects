@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="Description" content="Enter your description here" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css"
+    />
+
+    <title>Title</title>
+  </head>
+  <body>
+    <div class="container" style="padding: 100px">
+      <h1 class="display-1">BIDGAME</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Bid Number</th>
+            <th>Bid 1</th>
+            <th>Bid 2</th>
+            <th>Correct</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="bidResults"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const bidTable = async () => {
+        let data = [];
+        let res = await fetch("http://localhost:3000/Bids", {
+          method: "get",
+        });
+        data = await res.json();
+        console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+          let bidnum = data[i].bidnumber.join("");
+          let corrects = data[i].correct.join("");
+          let total = data[i].total;
+          let corrlength = data[i].correct.length;
+          document.getElementById("bidResults").innerHTML += `
+            <tr>
+            <td>${data[i].name}</td>
+            <td>${bidnum}</td>
+            <td>${data[i].bid1}</td>
+            <td>${data[i].bid2}</td>
+            <td>${corrlength > 0 ? corrects : "none"}</td>
+            <td>${data[i].total}$</td>
+            <td>${total > 0 ? "<h6>WON</h6/>" : "<h6>LOST</h6/>"}</td>
+          </tr>
+            `;
+        }
+      };
+      bidTable();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        transition: 1s;
+    }
+</style>
+<body>
+    <video autoplay muted controls id="myvideo" />
+
+
+    <script>
+        let num = prompt('Enter Number:');
+        console.log(num);
+        if (num.length !== 4 || isNaN(num)) {
+            alert('Error')
+        }
+        else {
+            playMyVideo(num)
+        }
+        function playMyVideo(num) {
+            let videos = [];
+            for (let i = 0; i < num.length; i++) {
+                switch (num[i]) {
+                    case '0':
+                        videos.push('videos/zero.mp4')
+                        break;
+                    case '1':
+                        videos.push('videos/one.mp4')
+                        break;
+                    case '2':
+                        videos.push('videos/two.mp4')
+                        break;
+                    case '3':
+                        videos.push('videos/three.mp4')
+                        break;
+                    case '4':
+                        videos.push('videos/four.mp4')
+                        break;
+                    case '5':
+                        videos.push('videos/five.mp4')
+                        break;
+                    case '6':
+                        videos.push('videos/six.mp4')
+                        break;
+                    case '7':
+                        videos.push('videos/seven.mp4')
+                        break;
+                    case '8':
+                        videos.push('videos/eight.mp4')
+                        break;
+                    case '9':
+                        videos.push('videos/nine.mp4')
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+            AgliVideo(0, videos);
+        }
+        function AgliVideo(index, videos) {
+            document.getElementById('myvideo').setAttribute('src', videos[index]);
+            document.getElementById('myvideo').addEventListener('ended', () => {
+                if (index === videos.length - 1) {
+                    index = 0;
+                }
+                else {
+                    index++
+                }
+                AgliVideo(index, videos)
+            })
+        }
+    </script>
+</body>
+
+</html>

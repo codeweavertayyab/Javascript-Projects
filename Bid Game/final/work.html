@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="Description" content="Enter your description here" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css"
+    />
+
+    <title>Title</title>
+  </head>
+  <body>
+    <div class="container" style="padding: 200px">
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="pname"
+          placeholder="Enter Name"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput2" class="form-label"
+          >Bid Number</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          id="bidnum"
+          placeholder="name@example.com"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput3" class="form-label"
+          >Amount 1</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          id="bid1"
+          placeholder="name@example.com"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput4" class="form-label"
+          >Amount 2</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          id="bid2"
+          placeholder="name@example.com"
+        />
+      </div>
+      <button type="button" class="btn btn-primary" onclick="BidGame()">
+        Create
+      </button>
+    </div>
+
+    <script>
+      const BidGame = async () => {
+        let pname = document.getElementById("pname").value;
+        let bidnum = document.getElementById("bidnum").value;
+        let bid1 = document.getElementById("bid1").value;
+        let bid2 = document.getElementById("bid2").value;
+        bidnum = bidnum.split("");
+        console.log(bidnum);
+        let win = [1, 2, 3, 4];
+
+        let correct = [];
+
+        for (let i = 0; i < bidnum.length; i++) {
+          if (bidnum[i] == "*" || bidnum[i] == "+") {
+            continue;
+          } else if (win[i] == bidnum[i]) {
+            correct.push(bidnum[i]);
+          } else {
+            break;
+          }
+        }
+
+        let bidtotal = parseInt(bid1) + parseInt(bid2);
+        if (correct.length == 1) {
+          bidtotal *= 8;
+        }
+        if (correct.length == 2) {
+          bidtotal *= 80;
+        }
+        if (correct.length == 3) {
+          bidtotal *= 800;
+        }
+        if (correct.length == 4) {
+          bidtotal *= 800;
+        }
+        if (correct.length == 0) {
+          bidtotal = 0;
+        }
+        console.log(bidtotal);
+
+        let bidObj = {
+          "name": pname,
+          "bidnumber": bidnum,
+          "bid1": bid1,
+          "bid2": bid2,
+          "correct": correct,
+          "total": bidtotal
+        };
+
+        let dataToSend = JSON.stringify(bidObj);
+        fetch("http://localhost:3000/Bids",{
+            method : "post",
+            body : dataToSend
+        });
+        window.location.href = "worktable.html"
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

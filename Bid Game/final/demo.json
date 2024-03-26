@@ -1,0 +1,13 @@
+{
+  "demoBid": [
+    {
+      "id": "53b9",
+      "name": "tayyab",
+      "bidnumber": ["1", "2", "3", "4"],
+      "bid1": 12,
+      "bid2": 12,
+      "correctnum": ["1", "2", "3", "4"],
+      "prizeWon": 192000
+    }
+  ]
+}

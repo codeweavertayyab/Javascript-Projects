@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="Description" content="Enter your description here" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="table.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <title>Bid Game</title>
+  </head>
+  <style></style>
+
+  <body>
+    <div class="container-fluid">
+      <div class="container-fluid myfluid">
+        <center>
+          <h1 class="mainheading" data-aos="fade-right">BID GAME</h1>
+          <a
+            href="bidfrom.html"
+            type="button"
+            class="btn btn-lg"
+            data-aos="fade-left"
+            >New Entry</a
+          >
+        </center>
+      </div>
+      <div class="container-fluid p-5">
+        <table
+          class="table table-striped table-sm table-bordered"
+          data-aos="fade-up"
+        >
+          <thead>
+            <tr>
+              <th class="mytable sno srow" scope="col">S.no</th>
+              <th class="mytable" scope="col">Name</th>
+              <th class="mytable" scope="col">Lottery Given</th>
+              <!-- <th class="mytable" scope="col">Correct Lottery Numbers</th> -->
+              <th class="mytable" scope="col">Bids</th>
+              <th class="mytable" scope="col">Total Prize</th>
+              <th class="mytable res rrow" scope="col">Result</th>
+            </tr>
+          </thead>
+          <tbody id="biddata"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      const showData = async () => {
+        let data = [];
+        let res = await fetch("http://localhost:3000/BidGame");
+        data = await res.json();
+        console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+          const bidss = data[i].value.join("");
+          // const correctNumbers = data[i].correct.length > 0 ? data[i].correct.join(" - ") : "none";
+          const bidNumbers = data[i].bid.join(" & ");
+          const total = data[i].total;
+          let resultText = total > 0 ? "Won" : "Lost";
+          document.getElementById("biddata").innerHTML += `
+          <tr>
+            <td scope="row">${i + 1}</td>
+            <td>${data[i].name.toUpperCase()}</td>
+            <td>${bidss}</td>
+            <td>${bidNumbers}</td>
+            <td>${total}$</td>
+            <td>${
+              total > 0
+                ? '<div class="btnwon text-center fw-bold mx-auto">Won</div>'
+                : '<div class="btnlost text-center fw-bold mx-auto">Lost</div>'
+            }</td>
+
+          </tr>
+      `;
+      console.log(total);
+        }
+      };
+      showData();
+      // const myBidGame = async () => {
+      //   const win = [1, 2, 3, 4];
+      //   let prize = [8, 80, 800, 8000];
+      //   const candid = [];
+      //   let correct = [];
+      //   let bid = [];
+      //   let total = 0;
+      //   let valcheck = false;
+
+      //   let name = prompt(`enter player name`);
+      //   let val = prompt(`enter ${name}'s guess number`).split("");
+
+      //   for (let j = 0; j < val.length; j++) {
+      //     if (val[j] == "*" || val[j] == "+") {
+      //       continue;
+      //     } else if (win[j] == parseInt(val[j])) {
+      //       correct.push(parseInt(val[j]));
+      //       valcheck = true;
+      //     } else {
+      //       valcheck = false;
+      //       break;
+      //     }
+      //   }
+      //   if (valcheck) {
+      //     for (let k = 0; k < 2; k++) {
+      //       let input = prompt(`enter ${name}'s bid`);
+      //       // input = round(input);
+      //       total += parseInt(input);
+      //       bid.push(`$${input}`);
+      //       valcheck = true;
+      //     }
+
+      //     if (correct.length == 1) {
+      //       total *= 8;
+      //     } else if (correct.length == 2) {
+      //       total *= 80;
+      //     } else if (correct.length == 3) {
+      //       total *= 800;
+      //     } else if (correct.length == 4) {
+      //       total *= 8000;
+      //     }
+
+      //     let obj = {
+      //       name: name,
+      //       value: val,
+      //       correct: correct,
+      //       bid: bid,
+      //       total: total,
+      //     };
+      //     const dataToSend = JSON.stringify(obj);
+      //     let dataReceived = "";
+      //     fetch("http://localhost:3000/BidGame", {
+      //       method: "post",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: dataToSend,
+      //     })
+      //       .then((resp) => {
+      //         if (resp.status === 200) {
+      //           return resp.json();
+      //           console.log("Status: " + resp.statusText);
+      //         } else {
+      //           console.log("Status: " + resp.statusText);
+      //           return Promise.reject("server");
+      //         }
+      //       })
+      //       .then((jsonData) => {
+      //         dataReceived = JSON.parse(jsonData);
+      //         console.log('Success');
+
+      //       })
+      //       .catch((err) => {
+      //         if (err === "server") {
+      //           return console.log(err);
+      //         }
+      //       });
+      //     console.log(obj);
+      //   } else {
+      //     alert("You Lost")
+      //     console.error("Not Approved");
+      //   }
+      // };
+      //   myBidGame();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+      });
+    </script>
+  </body>
+</html>

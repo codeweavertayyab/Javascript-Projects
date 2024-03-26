@@ -1,0 +1,20 @@
+{
+  "BidGame": [
+    {
+      "id": "508e",
+      "name": "aliyan",
+      "bidnum": "**56",
+      "fvalue": 65,
+      "lvalue": 454,
+      "amount": 519
+    },
+    {
+      "id": "aff3",
+      "name": "tayyan",
+      "bidnum": "++*0",
+      "fvalue": 65,
+      "lvalue": 58,
+      "amount": 123
+    }
+  ]
+}

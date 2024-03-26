@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="Description" content="Enter your description here" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <title>Form</title>
+  </head>
+  <style></style>
+
+  <body>
+    <form action="post" id="myForm">
+      <div class="container formcon">
+        <h1 class="display-1 fw-bold mb-5" data-aos="zoom-in">
+          New Entry For Bid
+        </h1>
+        <div class="row">
+          <div class="col" data-aos="fade-up-right">
+            <label for="" class="fw-bold">Name :</label>
+            <input
+              type="text"
+              placeholder="Enter Name"
+              class="form-control"
+              id="pname"
+              required
+            />
+          </div>
+          <div class="col" data-aos="fade-up-left">
+            <label for="" class="fw-bold">Bid Number :</label>
+            <input
+              type="text"
+              placeholder="Enter 4 Digit Number Of Your Bid"
+              class="form-control"
+              id="bidnumber"
+              pattern="[0-9*.]{4}"
+              title="Please enter exactly 4 digits."
+              required
+            />
+            <span id="error" style="color: yellow; display: none"
+              >Please enter a 4-digit number.</span
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col" data-aos="fade-up-right">
+            <label for="" class="fw-bold">Amount 1 :</label>
+            <input
+              type="number"
+              placeholder="Bid Amount 1"
+              class="form-control"
+              id="bid1"
+              required
+            />
+            <span id="bid1error"></span>
+          </div>
+          <div class="col" data-aos="fade-up-left">
+            <label for="" class="fw-bold">Amount 2 :</label>
+            <input
+              type="number"
+              placeholder="Bid Amount 2"
+              class="form-control"
+              id="bid2"
+              required
+            />
+            <span id="bid2error"></span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-mysubmit btn-lg mt-5 fw-bold"
+          onclick="myBidGame()"
+          data-aos="fade-up"
+        >
+          Enter
+        </button>
+      </div>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      var form = document.getElementById("myForm");
+      function handleForm(event) {
+        event.preventDefault();
+      }
+      form.addEventListener("submit", handleForm);
+      document
+        .getElementById("bidnumber")
+        .addEventListener("input", function (event) {
+          let input = event.target.value;
+
+          input = input.replace(/[^\d*+]/g, "");
+
+          if (input.length < 4) {
+            document.getElementById("error").style.display = "inline";
+          } else {
+            document.getElementById("error").style.display = "none";
+          }
+
+          input = input.slice(0, 4);
+
+          event.target.value = input;
+        });
+      document
+        .getElementById("bid1")
+        .addEventListener("keydown", function (event) {
+          const keyCode = event.keyCode || event.which;
+
+          if (
+            !(
+              (keyCode >= 48 && keyCode <= 57) ||
+              (keyCode >= 96 && keyCode <= 105) ||
+              keyCode === 9 ||
+              keyCode === 8 ||
+              keyCode === 46 ||
+              keyCode === 37 ||
+              keyCode === 39
+            )
+          ) {
+            event.preventDefault();
+          }
+        });
+      document
+        .getElementById("bid2")
+        .addEventListener("keydown", function (event) {
+          const keyCode = event.keyCode || event.which;
+
+          if (
+            !(
+              (keyCode >= 48 && keyCode <= 57) ||
+              (keyCode >= 96 && keyCode <= 105) ||
+              keyCode === 9 ||
+              keyCode === 8 ||
+              keyCode === 46 ||
+              keyCode === 37 ||
+              keyCode === 39
+            )
+          ) {
+            event.preventDefault();
+          }
+        });
+
+      const myBidGame = async () => {
+        let bid1err = document.getElementById("bid1").value;
+        let bid2err = document.getElementById("bid2").value;
+        if (bid1err <= 0) {
+          document.getElementById("bid1error").innerHTML =
+            "Enter Amount Should Be Greater Than Zero!";
+          document.getElementById("bid1error").style.color = "yellow";
+          document.getElementById("bid1").style.border = "2px solid red";
+        } else if (bid2err <= 0) {
+          document.getElementById("bid2error").innerHTML =
+            "Enter Amount Should Be Greater Than Zero!";
+          document.getElementById("bid2error").style.color = "yellow";
+          document.getElementById("bid2").style.border = "2px solid red";
+        } else {
+          const win = [1, 2, 3, 4];
+          let prize = [8, 80, 800, 8000];
+          const candid = [];
+          let correct = [];
+          let bid = [];
+          let total = 0;
+          let name = document.getElementById("pname").value;
+          let val = document.getElementById("bidnumber").value.split("");
+          let bid1 = document.getElementById("bid1").value;
+          let bid2 = document.getElementById("bid2").value;
+          let bidtotal = 0;
+          // if (bid1 % 10 > 5) {
+          //   bid1 = parseInt(bid1 / 10) * 10 + 10;
+          //   console.log(bid1);
+          // } else if (bid1 % 10 < 5 && bid1 % 10 > 0) {
+          //   bid1 = parseInt(bid1 / 10) * 10 + 5;
+          //   console.log(bid1);
+          // }
+          // if (bid2 % 10 > 5) {
+          //   bid2 = parseInt(bid2 / 10) * 10 + 10;
+          //   console.log(bid2);
+          // } else if (bid2 % 10 < 5 && bid2 % 10 > 0) {
+          //   bid2 = parseInt(bid2 / 10) * 10 + 5;
+          //   console.log(bid2);
+          // }
+          for (let w = bid1; w < bid1 + 5; w++) {
+            if (w % 5 == 0) {
+              bid1 = w;
+              break;
+            }
+            console.log(bid1);
+          }
+          for (let t = bid2; t < bid2 + 5; t++) {
+            if (t % 5 == 0) {
+              bid2 = t;
+              break;
+            }
+          }
+          bid.push(bid1, bid2);
+          bidtotal = parseInt(bid1) + parseInt(bid2);
+
+// console.log(total);
+          for (let j = 0; j < val.length; j++) {
+            if (val[j] == "*" || val[j] == "+") {
+              continue;
+            } else if (win[j] == parseInt(val[j])) {
+              // for (let g = 0; g < bid.length; g++) {
+              //   total += parseInt(bid[g]);
+              //   console.log(total);
+              // }
+              correct.push(parseInt(val[j]));
+              total = bidtotal;
+            } else {
+              console.log(total);
+              // correct.push("none");
+              break;
+            }
+          }
+// console.log(total);
+          if (correct.length == 1) {
+            total *= 8;
+          } else if (correct.length == 2) {
+            total *= 80;
+          } else if (correct.length == 3) {
+            total *= 800;
+          } else if (correct.length == 4) {
+            total *= 8000;
+          }
+           else {
+            total = total - bidtotal;
+            
+          }
+          // console.log(total);
+          let obj = {
+            name: name,
+            value: val,
+            correct: correct,
+            bid: bid,
+            total: total,
+          };
+          const dataToSend = JSON.stringify(obj);
+          let dataReceived = "";
+          fetch("http://localhost:3000/BidGame", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: dataToSend,
+          })
+            .then((resp) => {
+              if (resp.status === 200) {
+                return resp.json();
+                console.log("Status: " + resp.statusText);
+              } else {
+                console.log("Status: " + resp.statusText);
+                return Promise.reject("END");
+              }
+            })
+            .then((jsonData) => {
+              dataReceived = JSON.parse(jsonData);
+              console.log("Success");
+            })
+            .catch((err) => {
+              if (err === "server") {
+                return console.log(err);
+              }
+            });
+          console.log(obj);
+          window.location.href = "bid.html";
+        }
+      };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+      });
+    </script>
+  </body>
+</html>

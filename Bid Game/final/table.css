@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Honk&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Changa:wght@200&display=swap");
+* {
+  margin: 0%;
+  padding: 0%;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+/* table css */
+.container-fluid {
+  margin: 0%;
+  padding: 0%;
+}
+.mainheading {
+  font-size: 100px;
+  color: blue;
+  margin-top: 100px;
+  border-top: 10px solid rgb(236, 250, 156);
+  border-bottom: 10px solid rgb(255, 138, 233);
+  border-left: 10px dashed rgb(0, 0, 178);
+  border-right: 10px dashed rgb(0, 0, 178);
+  width: 600px;
+  margin-bottom: 30px;
+  font-family: "Honk", system-ui;
+  border-radius: 20px;
+  letter-spacing: 10px;
+}
+
+.btn {
+  color: rgb(0, 0, 178) !important;
+  border: 3px solid rgb(0, 0, 178);
+  border-radius: 50px;
+  transition: all 0.5s;
+  width: 700px;
+  font-size: 25px;
+  font-family: "Changa", sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: white !important;
+  transform: translateY(-5px);
+  background-color: rgb(0, 0, 178);
+}
+
+.mytable {
+  background-color: rgb(0, 0, 178) !important;
+  color: white !important;
+  height: 50px;
+  padding-bottom: 10px !important;
+  font-family: "Changa", sans-serif;
+  font-size: 20px;
+  text-align: center;
+ 
+}
+.sno{
+  border-top-left-radius: 16px;
+}
+.res{
+  border-top-right-radius: 16px;
+}
+tr td {
+  text-align: center;
+}
+.btnwon {
+  background-color: rgb(0, 200, 17);
+  color: white;
+  height: 30px;
+  width: 100px;
+  border-radius: 5px;
+  padding-top: 3px;
+  font-family: "Changa", sans-serif;
+  border: 1px solid black;
+}
+
+.btnlost {
+  background-color: red;
+  height: 30px;
+  width: 100px;
+  border-radius: 5px;
+  color: white;
+  padding-top: 3px;
+  font-family: "Changa", sans-serif;
+  border: 1px solid black;
+}
+
+.table-bordered {
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
